@@ -85,7 +85,7 @@ final Uri deleteSocialAccApi = Uri.parse('${baseUrl}delete_social_account');
 final Uri getInstamojoWebviewApi = Uri.parse('${baseUrl}instamojo_webview');
 
 //Chat apis
-final Uri getPersonalChatListApi = Uri.parse('${chatBaseUrl}get_chat_history');
+final Uri getPersonalChatListApi = Uri.parse('${chatBaseUrl}get_messages');
 final Uri readMessagesApi = Uri.parse('${chatBaseUrl}mark_msg_read');
 final Uri getConverstationApi = Uri.parse('${chatBaseUrl}load_chat');
 const String sendMessageApi = '${chatBaseUrl}send_msg';

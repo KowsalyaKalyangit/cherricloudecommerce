@@ -27,7 +27,7 @@ class ChatRepository {
   }) async {
     try {
       var result =
-          await ApiBaseHelper().postAPICall(getPersonalChatListApi, parameter);
+          await ApiBaseHelper().postAPICall(Uri.parse('https://shop.pondicherryshopping.com/app/v1/api/get_messages'), parameter);
 
       if (result['error']) {
         throw ApiException(

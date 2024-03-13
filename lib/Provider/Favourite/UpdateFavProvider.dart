@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:eshop_multivendor/Model/Section_Model.dart';
 import 'package:eshop_multivendor/Provider/UserProvider.dart';
 import 'package:eshop_multivendor/repository/Favourite/UpdateFavRepository.dart';
@@ -82,6 +83,7 @@ class UpdateFavProvider extends ChangeNotifier {
           String qty = (int.parse(favList[index].prVarientList![0].cartCount!) +
                   int.parse(favList[index].qtyStepSize!))
               .toString();
+         
 
           if (int.parse(qty) < favList[index].minOrderQuntity!) {
             qty = favList[index].minOrderQuntity.toString();
@@ -94,6 +96,7 @@ class UpdateFavProvider extends ChangeNotifier {
             USER_ID: context.read<UserProvider>().userId,
             QTY: qty,
           };
+          log(parameter.toString());
           apiBaseHelper.postAPICall(manageCartApi, parameter).then(
             (getdata) {
               bool error = getdata['error'];
@@ -171,6 +174,7 @@ class UpdateFavProvider extends ChangeNotifier {
       updateNow();
     }
   }
+    
 
   Future<void> removeFav(String id, String vId, BuildContext context) async {
     try {
