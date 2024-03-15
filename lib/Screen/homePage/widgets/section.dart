@@ -177,7 +177,7 @@ class SectionHeadingContainer extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w900,
               fontStyle: FontStyle.normal,
               fontFamily: 'ubuntu',
               fontSize: textFontSize16,
@@ -194,7 +194,7 @@ class SectionHeadingContainer extends StatelessWidget {
                   style: TextStyle(
                       fontSize: textFontSize12,
                       fontFamily: 'ubuntu',
-                      fontWeight: FontWeight.w400,
+                      fontWeight: FontWeight.w500,
                       fontStyle: FontStyle.normal,
                       color: Theme.of(context).colorScheme.lightBlack),
                 ),
@@ -205,7 +205,7 @@ class SectionHeadingContainer extends StatelessWidget {
                   child: Text(
                     getTranslated(context, 'Show All'),
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                          color: Theme.of(context).colorScheme.fontColor,
+                          color:colors.grad2Color,
                           fontSize: textFontSize12,
                           fontWeight: FontWeight.w400,
                           fontStyle: FontStyle.normal,
@@ -384,21 +384,25 @@ class SingleSectionContainer extends StatelessWidget {
                   padding: const EdgeInsetsDirectional.only(top: 5),
                   crossAxisCount: 2,
                   shrinkWrap: true,
-                  childAspectRatio: 0.750,
+                  childAspectRatio: 0.850,
                   mainAxisSpacing: 5,
-                  crossAxisSpacing: 5,
+                  crossAxisSpacing: 2,
+                  
                   physics: const NeverScrollableScrollPhysics(),
                   children: List.generate(
                     productList.length < 4 ? productList.length : 4,
                     (productIndex) {
-                      return SingleProductContainer(
-                        sectionPosition: index,
-                        index: productIndex,
-                        pictureFlex: 10,
-                        textFlex: 10,
-                        productDetails: productList[productIndex],
-                        length: productList.length,
-                        showDiscountAtSameLine: false,
+                      return Card(
+                        elevation: 1,
+                        child: SingleProductContainer(
+                          sectionPosition: index,
+                          index: productIndex,
+                          pictureFlex: 10,
+                          textFlex: 10,
+                          productDetails: productList[productIndex],
+                          length: productList.length,
+                          showDiscountAtSameLine: false,
+                        ),
                       );
                     },
                   ),

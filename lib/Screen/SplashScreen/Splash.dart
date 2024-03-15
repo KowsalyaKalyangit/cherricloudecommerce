@@ -6,6 +6,7 @@ import 'package:eshop_multivendor/widgets/applogo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import '../../Helper/String.dart';
 import '../../widgets/desing.dart';
@@ -84,12 +85,12 @@ class _SplashScreen extends State<Splash> with TickerProviderStateMixin {
               width: double.infinity,
               height: double.infinity,
               decoration: DesignConfiguration.back(),
-              child: const Center(
-                child: AppLogo(
-                  width: 150,
-                  height: 150,
-                  colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
-                ),
+              child:   Center(
+                child:SvgPicture.asset(
+              DesignConfiguration.setSvgPath('splashlogo4'),
+              fit: BoxFit.fill,
+              colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn)
+            ),
               ),
             ),
             Image.asset(
@@ -108,7 +109,7 @@ class _SplashScreen extends State<Splash> with TickerProviderStateMixin {
     context
         .read<HomePageProvider>()
         .getSections(isnotify: false, context: context);
-    var duration = const Duration(seconds: 2);
+    var duration = const Duration(milliseconds: 200);
     return Timer(duration, navigationPage);
   }
 
@@ -147,3 +148,5 @@ class _SplashScreen extends State<Splash> with TickerProviderStateMixin {
     super.dispose();
   }
 }
+
+            

@@ -87,7 +87,7 @@ final Uri getInstamojoWebviewApi = Uri.parse('${baseUrl}instamojo_webview');
 //Chat apis
 final Uri getPersonalChatListApi = Uri.parse('${chatBaseUrl}get_messages');
 final Uri readMessagesApi = Uri.parse('${chatBaseUrl}mark_msg_read');
-final Uri getConverstationApi = Uri.parse('${chatBaseUrl}load_chat');
+final Uri getConverstationApi = Uri.parse('${chatBaseUrl}get_messages');
 const String sendMessageApi = '${chatBaseUrl}send_msg';
 final Uri searchSellerApi = Uri.parse('${chatBaseUrl}search_user');
 

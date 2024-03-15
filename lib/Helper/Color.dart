@@ -30,8 +30,8 @@ extension colors on ColorScheme {
       brightness == Brightness.dark ? darkColor : const Color(0xffEEF2F9);
 
   Color get blue => brightness == Brightness.dark
-      ? const Color(0xff8381d5)
-      : const Color(0xff4543c1);
+      ? const Color(0xffFDC994)
+      : const Color(0xffFC6A57);
 
   Color get fontColor =>
       brightness == Brightness.dark ? whiteTemp : const Color(0xff222222);

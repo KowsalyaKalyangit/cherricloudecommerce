@@ -155,11 +155,11 @@ class Routes {
       ),
     );
   }
- static navigateToOTP(BuildContext context, {Widget? classType, required bool isPop, bool? isRefresh}) {
+ static navigateToOTP(BuildContext context, {Widget? classType, required bool isPop, bool? isRefresh,String ?otp}) {
     Navigator.push(
       context,
       CupertinoPageRoute(
-        builder: (context) =>   OtpValidatePage(isPop: isPop, isRefresh: isRefresh, classType: classType),
+        builder: (context) =>   OtpValidatePage(isPop: isPop, isRefresh: isRefresh, classType: classType,otp: otp,),
       ),
     );
   }

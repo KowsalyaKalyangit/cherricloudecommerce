@@ -56,9 +56,10 @@ import '../../widgets/validation.dart';
 class OtpValidatePage extends StatefulWidget {
    final Widget? classType;
   final bool isPop;
+  final String? otp;
   final bool? isRefresh;
 
-  const OtpValidatePage({Key? key, this.classType, required this.isPop, this.isRefresh})
+  const OtpValidatePage({Key? key, this.classType, required this.isPop, this.otp,this.isRefresh,})
       : super(key: key);
    
 
@@ -686,6 +687,21 @@ class _OtpValidatePageState extends State<OtpValidatePage>  with TickerProviderS
       ),
     );
   }
+  otpText1() {
+    return Padding(
+      padding: const EdgeInsetsDirectional.only(
+        top: 13.0,
+      ),
+      child: Text(
+        widget.otp.toString(),
+        style: Theme.of(context).textTheme.titleSmall!.copyWith(
+              color: Theme.of(context).colorScheme.fontColor.withOpacity(0.5),
+              fontWeight: FontWeight.bold,
+              fontFamily: 'ubuntu',
+            ),
+      ),
+    );
+  }
 
   mobText() {
     return Padding(
@@ -752,6 +768,7 @@ class _OtpValidatePageState extends State<OtpValidatePage>  with TickerProviderS
                                      //getLogo(),
             monoVarifyText(),
             otpText(),
+            otpText1(),
             mobText(),
             //setMobileNo(),
             otpLayout(),

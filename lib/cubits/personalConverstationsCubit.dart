@@ -27,11 +27,11 @@ class PersonalConverstationsCubit extends Cubit<PersonalConverstationsState> {
   PersonalConverstationsCubit(this._chatRepository)
       : super(PersonalConverstationsInitial());
 
-  void fetchConverstations({required String currentUserId}) async {
+  void fetchConverstations({required String currentUserId, String ?ticket_id})async {
     emit(PersonalConverstationsFetchInProgress());
     try {
       final result = await _chatRepository
-          .getConverstationList(parameter: {'user_id': currentUserId});
+          .getConverstationList(parameter: {'user_id': currentUserId,'ticket_id':4.toString()});
       result.removeWhere((e) => e.id == null);
       emit(PersonalConverstationsFetchSuccess(personalConverstations: result));
     } catch (e) {

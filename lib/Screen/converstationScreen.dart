@@ -26,6 +26,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:open_filex/open_filex.dart';
 
+import '../Provider/customerSupportProvider.dart';
+
 class ConverstationScreen extends StatefulWidget {
   final PersonalChatHistory? personalChatHistory;
   final GroupDetails? groupDetails;
@@ -280,7 +282,7 @@ class ConverstationScreenState extends State<ConverstationScreen>
                   context
                       .read<PersonalConverstationsCubit>()
                       .fetchConverstations(
-                          currentUserId: context.read<UserProvider>().userId!);
+                          currentUserId: context.read<UserProvider>().userId!,ticket_id: context.read<CustomerSupportProvider>().id.toString());
                 }
                 FocusScope.of(context).unfocus();
 

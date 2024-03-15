@@ -3,6 +3,7 @@ import 'package:eshop_multivendor/Helper/Color.dart';
 import 'package:eshop_multivendor/Helper/String.dart';
 import 'package:eshop_multivendor/Helper/routes.dart';
 import 'package:eshop_multivendor/Provider/UserProvider.dart';
+import 'package:eshop_multivendor/Provider/chatProvider.dart';
 import 'package:eshop_multivendor/Screen/Language/languageSettings.dart';
 import 'package:eshop_multivendor/Screen/NoInterNetWidget/NoInterNet.dart';
 import 'package:eshop_multivendor/cubits/personalConverstationsCubit.dart';
@@ -121,13 +122,14 @@ class ConverstationListScreenState extends State<ConverstationListScreen>
                                 },
                               )),
                       trailing:
-                          (unreadMessages.isNotEmpty && unreadMessages != '0')
+                          (unreadMessages.isNotEmpty || unreadMessages != '0')
                               ? CircleAvatar(
                                   radius: 14,
-                                  child: Text(
-                                    personalChatHistory.unreadMsg!,
-                                    style: const TextStyle(
-                                      color: Colors.white,
+                                  child:
+                                   Text(
+                                   personalChatHistory.unreadMsg.toString(),
+                                    style:  TextStyle(
+                                      color: Colors.black,
                                     ),
                                   ),
                                 )
@@ -152,7 +154,7 @@ class ConverstationListScreenState extends State<ConverstationListScreen>
                                 .read<PersonalConverstationsCubit>()
                                 .fetchConverstations(
                                     currentUserId:
-                                        context.read<UserProvider>().userId!);
+                                        context.read<UserProvider>().userId!,);
                           });
                         }),
                   ),

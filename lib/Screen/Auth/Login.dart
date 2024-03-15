@@ -241,7 +241,10 @@ class _LoginPageState extends State<Login> with TickerProviderStateMixin {
               var getdata = value['data'][0];
                Routes.navigateToOTP(
           context,
+           otp: getdata['OTP'].toString(),
           isPop: false,
+         
+          
         );
      
              // saveAndNavigate(getdata);
@@ -661,7 +664,7 @@ class _LoginPageState extends State<Login> with TickerProviderStateMixin {
           ),
           hintText: getTranslated(
             context,
-            'MOBILEHINT_LBL',
+            'EMAILHINT_LBL',
           ),
           hintStyle: TextStyle(
               color: Theme.of(context).colorScheme.fontColor.withOpacity(0.3),

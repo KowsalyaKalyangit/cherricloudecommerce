@@ -76,12 +76,13 @@ class StateProfile extends State<MyProfile> with TickerProviderStateMixin {
     return ListView(
       padding: EdgeInsets.zero,
       shrinkWrap: true,
-      physics: const BouncingScrollPhysics(),
+      physics:  BouncingScrollPhysics(),
       children: <Widget>[
         context.read<UserProvider>().userId == ''
-            ? const SizedBox()
+            ?   SizedBox()
             : _getDrawerItem(
                 getTranslated(context, 'MY_ORDERS_LBL'), 'pro_myorder'),
+                 
         context.read<UserProvider>().userId == ''
             ? const SizedBox()
             : _getDrawerItem(
@@ -114,9 +115,9 @@ class StateProfile extends State<MyProfile> with TickerProviderStateMixin {
             ? const SizedBox()
             : _getDrawerItem(getTranslated(context, 'CUSTOMER_SUPPORT'),
                 'pro_customersupport'),
-        context.read<UserProvider>().userId == ''
-            ? const SizedBox()
-            : _getDrawerItem(getTranslated(context, 'CHAT'), 'pro_chat'),
+        // context.read<UserProvider>().userId == ''
+        //     ? const SizedBox()
+        //     : _getDrawerItem(getTranslated(context, 'CHAT'), 'pro_chat'),
         _getDrawerItem(getTranslated(context, 'ABOUT_LBL'), 'pro_aboutus'),
         _getDrawerItem(
             getTranslated(context, 'CONTACT_LBL'), 'pro_contact_us'),
@@ -129,12 +130,12 @@ class StateProfile extends State<MyProfile> with TickerProviderStateMixin {
             getTranslated(context, 'RETURN_POLICY_LBL'), 'pro_return_policy'),
         _getDrawerItem(getTranslated(context, 'RATE_US'), 'pro_rateus'),
         _getDrawerItem(getTranslated(context, 'Share App'), 'pro_share'),
-        context.read<UserProvider>().userId == ''
-            ? const SizedBox()
-            : _getDrawerItem(
-                getTranslated(context, 'DeleteAcoountNow'),
-                'delete_user',
-              ),
+        // context.read<UserProvider>().userId == ''
+        //     ? const SizedBox()
+        //     : _getDrawerItem(
+        //         getTranslated(context, 'DeleteAcoountNow'),
+        //         'delete_user',
+        //       ),
         context.read<UserProvider>().userId == ''
             ? const SizedBox()
             : _getDrawerItem(getTranslated(context, 'LOGOUT'), 'pro_logout'),
@@ -148,6 +149,7 @@ class StateProfile extends State<MyProfile> with TickerProviderStateMixin {
       child: ListTile(
         trailing: const Icon(
           Icons.navigate_next,
+         
           color: colors.primary,
         ),
         leading: SvgPicture.asset(
@@ -248,20 +250,38 @@ class StateProfile extends State<MyProfile> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
+      
         key: scaffoldKey,
         body: Consumer<UserProvider>(builder: (context, data, child) {
           return SafeArea(
+           
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Padding(
                     padding:
-                        const EdgeInsetsDirectional.only(bottom: 10.0, top: 10),
+                        const EdgeInsetsDirectional.only(bottom: 10.0, top: 0),
                     child: Container(
+                      height: 100,
                       padding: const EdgeInsetsDirectional.only(
                         start: 10.0,
                       ),
+                     decoration: BoxDecoration(
+                       gradient: LinearGradient(
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                              colors: [
+                                                colors.grad2Color,
+                                                colors.grad1Color
+                                              ],
+                                              stops: [
+                                                0,
+                                                1
+                                              ]),
+                      // borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30),bottomRight: Radius.circular(30))
+                     ),
                       child: Row(
                         children: [
                           Selector<UserProvider, String>(
@@ -275,65 +295,7 @@ class StateProfile extends State<MyProfile> with TickerProviderStateMixin {
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Selector<UserProvider, String>(
-                                selector: (_, provider) => provider.curUserName,
-                                builder: (context, userName, child) {
-                                  return Text(
-                                    userName == ''
-                                        ? getTranslated(context, 'GUEST'): userName,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleMedium!
-                                        .copyWith(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .fontColor,
-                                        ),
-                                  );
-                                },
-                              ),
-                              Selector<UserProvider, String>(
-                                selector: (_, provider) => provider.mob,
-                                builder: (context, userMobile, child) {
-                                  return userMobile != ''
-                                      ? Text(
-                                          userMobile,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleSmall!
-                                              .copyWith(
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .fontColor,
-                                                  fontWeight:
-                                                      FontWeight.normal),
-                                        )
-                                      : Container(
-                                          height: 0,
-                                        );
-                                },
-                              ),
-                              Selector<UserProvider, String>(
-                                selector: (_, provider) => provider.email,
-                                builder: (context, userEmail, child) {
-                                  return userEmail != ''
-                                      ? Text(
-                                          userEmail,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleSmall!
-                                              .copyWith(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .fontColor,
-                                                fontWeight: FontWeight.normal,
-                                              ),
-                                        )
-                                      : Container(
-                                          height: 0,
-                                        );
-                                },
-                              ),
+                              
                               Consumer<UserProvider>(
                                 builder: (context, userProvider, _) {
                                   return userProvider.curUserName == ''
@@ -349,7 +311,7 @@ class StateProfile extends State<MyProfile> with TickerProviderStateMixin {
                                                   .textTheme
                                                   .bodySmall!
                                                   .copyWith(
-                                                    color: colors.primary,
+                                                    color:Colors.black,
                                                     decoration: TextDecoration
                                                         .underline,
                                                   ),
@@ -385,7 +347,7 @@ class StateProfile extends State<MyProfile> with TickerProviderStateMixin {
     BuildContext context,
     VoidCallback? onBtnSelected,
   ) {
-    return Stack(
+    return Row(
       children: <Widget>[
         GestureDetector(
           onTap: () {
@@ -410,7 +372,7 @@ class StateProfile extends State<MyProfile> with TickerProviderStateMixin {
                 builder: (context, userProvider, _) {
                   return userProvider.profilePic != ''
                       ? DesignConfiguration.getCacheNotworkImage(
-                          boxFit: extendImg ? BoxFit.cover : BoxFit.contain,
+                          boxFit: extendImg ? BoxFit.cover : BoxFit.cover,
                           context: context,
                           heightvalue: 64.0,
                           widthvalue: 64.0,
@@ -423,32 +385,77 @@ class StateProfile extends State<MyProfile> with TickerProviderStateMixin {
             ),
           ),
         ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Selector<UserProvider, String>(
+                                selector: (_, provider) => provider.curUserName,
+                                builder: (context, userName, child) {
+                                  return Text(
+                                    userName == ''
+                                        ? getTranslated(context, 'GUEST'): userName,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(
+                                          color: Colors.black,
+                                        ),
+                                  );
+                                },
+                              ),
+                              
+                              Selector<UserProvider, String>(
+                                selector: (_, provider) => provider.email,
+                                builder: (context, userEmail, child) {
+                                  return userEmail != ''
+                                      ? Text(
+                                          userEmail,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleSmall!
+                                              .copyWith(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .fontColor,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                        )
+                                      : Container(
+                                          height: 0,
+                                        );
+                                },
+                              ),
+            Selector<UserProvider, String>(
+                                    selector: (_, provider) => provider.mob,
+                                    builder: (context, userMobile, child) {
+                                      return userMobile != ''
+                                          ? Text(
+                                              userMobile,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleSmall!
+                                                  .copyWith(
+                                                      color: Colors.black),
+                                            )
+                                          : Container(
+                                              height: 0,
+                                            );
+                                    },
+                                  ),
+          ],
+        ),
+        SizedBox(width: 100,),
+        
         if (context.read<UserProvider>().userId != '')
-          Positioned.directional(
-            textDirection: Directionality.of(context),
-            end: 20,
-            bottom: 5,
-            child: Container(
-              height: 20,
-              width: 20,
-              decoration: BoxDecoration(
-                color: colors.primary,
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(circularBorderRadius20),
-                ),
-                border: Border.all(color: colors.primary),
-              ),
-              child: InkWell(
-                child: const Icon(
-                  Icons.edit,
-                  color: colors.whiteTemp,
-                  size: 10,
-                ),
-                onTap: () {
-                  onBtnSelected!();
-                },
-              ),
+          InkWell(
+            child:   Image.asset(
+               'assets/images/png/edit.png',
+               height: 20,color: Colors.black,
             ),
+            onTap: () {
+              onBtnSelected!();
+            },
           ),
       ],
     );

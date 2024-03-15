@@ -343,18 +343,34 @@ class DashboardPageState extends State<Dashboard>
       title = getTranslated(context, 'PROFILE');
     } */
     final appBar = AppBar(
-      systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarColor: Theme.of(context).colorScheme.lightWhite),
+      // systemOverlayStyle: SystemUiOverlayStyle(
+      //     statusBarColor: Theme.of(context).colorScheme.lightWhite),
       elevation: 0,
+      toolbarHeight: 90,
+      
       centerTitle: false,
       automaticallyImplyLeading: false,
-      backgroundColor: Theme.of(context).colorScheme.lightWhite,
-      title: /* _selBottom == 0
+     // backgroundColor: Theme.of(context).colorScheme.lightWhite,
+    //  flexibleSpace: Container(
+    //   decoration: const BoxDecoration(
+    //     gradient: LinearGradient(
+    //       begin: Alignment.topLeft,
+    //       end: Alignment.topRight,
+    //       colors: <Color>[colors.grad2Color, colors.grad1Color]),
+    //   ),
+    // ),
+    leadingWidth: 100,
+      leading: /* _selBottom == 0
           ? */
-          SvgPicture.asset(
-        DesignConfiguration.setSvgPath('titleicon'),
-        height: 40,
-      ),
+          Image.asset(
+              DesignConfiguration.setPngPath('c'),
+               height: 70,
+               width: 90,
+               fit: BoxFit.fill,
+                //color: colors.grad2Color,
+               
+              
+            ),
       /* : Text(
               title!,
               style: const TextStyle(
@@ -411,7 +427,7 @@ class DashboardPageState extends State<Dashboard>
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(circularBorderRadius10),
-            color: Theme.of(context).colorScheme.white,
+           // color: Theme.of(context).colorScheme.white,
           ),
           margin: const EdgeInsetsDirectional.only(end: 10),
           width: Platform.isAndroid ? 37 : 30,

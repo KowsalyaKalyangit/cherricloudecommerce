@@ -55,7 +55,7 @@ class SingleProductContainer extends StatelessWidget {
 
       return Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(circularBorderRadius10),
+          borderRadius: BorderRadius.circular(circularBorderRadius5),
           color: Theme.of(context).colorScheme.white,
         ),
         margin: const EdgeInsetsDirectional.only(bottom: 2, end: 2),
@@ -317,7 +317,17 @@ class SingleProductContainer extends StatelessWidget {
                 right: 0,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.white,
+                    gradient: LinearGradient(
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                              colors: [
+                                                colors.grad1Color,
+                                                colors.grad2Color
+                                              ],
+                                              stops: [
+                                                0,
+                                                1
+                                              ]),
                     borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(circularBorderRadius10),
                       topRight: Radius.circular(circularBorderRadius8),
