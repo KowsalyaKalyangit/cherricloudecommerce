@@ -97,10 +97,10 @@ class StateProfile extends State<MyProfile> with TickerProviderStateMixin {
             ? const SizedBox()
             : _getDrawerItem(
                 getTranslated(context, 'MYTRANSACTION'), 'pro_th'),
-        _getDrawerItem(
-            getTranslated(context, 'CHANGE_THEME_LBL'), 'pro_theme'),
-        _getDrawerItem(
-            getTranslated(context, 'CHANGE_LANGUAGE_LBL'), 'pro_language'),
+        // _getDrawerItem(
+        //     getTranslated(context, 'CHANGE_THEME_LBL'), 'pro_theme'),
+        // _getDrawerItem(
+        //     getTranslated(context, 'CHANGE_LANGUAGE_LBL'), 'pro_language'),
         context.read<UserProvider>().userId == ''
             ? const SizedBox()
             : context.read<UserProvider>().loginType == PHONE_TYPE
@@ -192,7 +192,8 @@ class StateProfile extends State<MyProfile> with TickerProviderStateMixin {
                 context: context, title: 'PRIVACY');
           } else if (title == getTranslated(context, 'RATE_US')) {
             _openStoreListing();
-          } else if (title == getTranslated(context, 'Share App')) {
+          } 
+          else if (title == getTranslated(context, 'Share App')) {
             var str =
                 "$appName\n\n${getTranslated(context, 'APPFIND')}$androidLink$packageName\n\n ${getTranslated(context, 'IOSLBL')}\n$iosLink";
             Share.share(str);
@@ -264,11 +265,13 @@ class StateProfile extends State<MyProfile> with TickerProviderStateMixin {
                     padding:
                         const EdgeInsetsDirectional.only(bottom: 10.0, top: 0),
                     child: Container(
-                      height: 100,
+                      height: 110,
                       padding: const EdgeInsetsDirectional.only(
                         start: 10.0,
                       ),
+                      
                      decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(bottomLeft: Radius.circular(25),bottomRight: Radius.circular(25)),
                        gradient: LinearGradient(
                                               begin: Alignment.topLeft,
                                               end: Alignment.bottomRight,

@@ -762,7 +762,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                             padding: const EdgeInsetsDirectional.only(top: 5),
                             crossAxisCount: 2,
                             controller: controller,
-                            childAspectRatio: 0.6,
+                            childAspectRatio: 0.8,
                             physics: const AlwaysScrollableScrollPhysics(),
                             children: List.generate(
                               (offset < total)
@@ -801,7 +801,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
                 Radius.circular(
-                  circularBorderRadius25,
+                  circularBorderRadius5,
                 ),
               ),
             ),
@@ -827,7 +827,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
 
         return Container(
           height: 50,
-          padding: const EdgeInsets.only(bottom: 8.0),
+          padding: const EdgeInsets.only(bottom: 10.0,),
           child: ListView(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,

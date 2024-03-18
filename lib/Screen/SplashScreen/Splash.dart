@@ -87,8 +87,9 @@ class _SplashScreen extends State<Splash> with TickerProviderStateMixin {
               decoration: DesignConfiguration.back(),
               child:   Center(
                 child:SvgPicture.asset(
-              DesignConfiguration.setSvgPath('splashlogo4'),
+              DesignConfiguration.setSvgPath('splashlogo4',),
               fit: BoxFit.fill,
+              height: 120.0,
               colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn)
             ),
               ),

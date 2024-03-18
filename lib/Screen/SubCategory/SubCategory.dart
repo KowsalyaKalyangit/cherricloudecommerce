@@ -41,6 +41,7 @@ class SubCategory extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: ClipRRect(
+                
                 borderRadius: BorderRadius.circular(circularBorderRadius10),
                 child: DesignConfiguration.getCacheNotworkImage(
                   boxFit: BoxFit.cover,

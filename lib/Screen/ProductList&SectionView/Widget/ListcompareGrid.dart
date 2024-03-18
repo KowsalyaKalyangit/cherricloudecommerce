@@ -449,7 +449,7 @@ class _GridViewProductListWidgetState extends State<GridViewProductListWidget> {
 
           return InkWell(
             child: Card(
-              elevation: 0.2,
+              elevation: 0.8,
               margin: EdgeInsetsDirectional.only(
                   bottom: 10, end: 10, start: widget.pad ? 10 : 0),
               child: Column(

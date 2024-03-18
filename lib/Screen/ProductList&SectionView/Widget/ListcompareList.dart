@@ -481,7 +481,10 @@ class _ListIteamListWidgetState extends State<ListIteamListWidget> {
                 clipBehavior: Clip.none,
                 children: [
                   Card(
-                    elevation: 0,
+                    elevation: 0.9,
+                 color:  Theme.of(context)
+                                                      .colorScheme
+                                                      .white,
                     child: InkWell(
                       borderRadius:
                           BorderRadius.circular(circularBorderRadius10),
@@ -570,9 +573,9 @@ class _ListIteamListWidgetState extends State<ListIteamListWidget> {
                                     children: [
                                       Padding(
                                         padding:
-                                            const EdgeInsetsDirectional.only(
+                                            const EdgeInsets.only(
                                           top: 2.0,
-                                          start: 15.0,
+                                           right: 15.0
                                         ),
                                         child: Text(
                                           widget.productList![widget.index!]
@@ -587,7 +590,7 @@ class _ListIteamListWidgetState extends State<ListIteamListWidget> {
                                                   fontWeight: FontWeight.w400,
                                                   fontStyle: FontStyle.normal,
                                                   fontSize: textFontSize12),
-                                          maxLines: 1,
+                                          maxLines: 3,
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
@@ -861,12 +864,27 @@ class _ListIteamListWidgetState extends State<ListIteamListWidget> {
                                   );
                                 }
                               },
-                              child: const Padding(
+                              child:   Padding(
                                 padding: EdgeInsets.all(8.0),
-                                child: Icon(
-                                  Icons.shopping_cart_outlined,
-                                  size: 20,
-                                ),
+                                child: Container(
+                                  height: 30,
+                                  width: 100,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    gradient: LinearGradient(
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                              colors: [
+                                                colors.grad1Color,
+                                                colors.grad2Color
+                                              ],
+                                              stops: [
+                                                0,
+                                                1
+                                              ]),
+                                  ),
+
+                                  child: Center(child: Text('Add to Cart',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),)))
                               ),
                             ),
                           )

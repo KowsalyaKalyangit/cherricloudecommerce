@@ -128,170 +128,174 @@ class _ListViewLayOutState extends State<ListViewLayOut> {
               child: InkWell(
                 child: Stack(
                   children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Hero(
-                            tag:
-                                '$heroTagUniqueString$heroTagUniqueString$index${context.read<ExploreProvider>().productList[index].id}',
-                            child: Stack(
+                    Card(
+                      elevation: 0.7,
+                      color:Theme.of(context).colorScheme.white,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Flexible(
+                            flex: 1,
+                            child: Hero(
+                              tag:
+                                  '$heroTagUniqueString$heroTagUniqueString$index${context.read<ExploreProvider>().productList[index].id}',
+                              child: Stack(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(
+                                        circularBorderRadius7),
+                                    child: Stack(
+                                      children: [
+                                        DesignConfiguration.getCacheNotworkImage(
+                                          boxFit: BoxFit.cover,
+                                          context: context,
+                                          heightvalue: 107,
+                                          widthvalue: 107,
+                                          placeHolderSize: 50,
+                                          imageurlString: context
+                                              .read<ExploreProvider>()
+                                              .productList[index]
+                                              .image!,
+                                        ),
+                                        Positioned.fill(
+                                          child: context
+                                                      .read<ExploreProvider>()
+                                                      .productList[index]
+                                                      .availability ==
+                                                  '0'
+                                              ? Container(
+                                                  height: 55,
+                                                  color: colors.white70,
+                                                  padding:
+                                                      const EdgeInsets.all(2),
+                                                  child: Center(
+                                                    child: Text(
+                                                      getTranslated(context,
+                                                          'OUT_OF_STOCK_LBL'),
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodySmall!
+                                                          .copyWith(
+                                                            fontFamily: 'ubuntu',
+                                                            color: colors.red,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                      textAlign: TextAlign.center,
+                                                    ),
+                                                  ),
+                                                )
+                                              : const SizedBox(),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Flexible(
+                            flex: 2,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(
-                                      circularBorderRadius7),
-                                  child: Stack(
+                                Padding(
+                                  padding: const EdgeInsetsDirectional.only(
+                                      top: 15.0, start: 15.0),
+                                  child: Text(
+                                    context
+                                        .read<ExploreProvider>()
+                                        .productList[index]
+                                        .name!,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall!
+                                        .copyWith(
+                                            fontFamily: 'ubuntu',
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .fontColor,
+                                            fontWeight: FontWeight.w400,
+                                            fontStyle: FontStyle.normal,
+                                            fontSize: textFontSize12),
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsetsDirectional.only(
+                                      start: 15.0, top: 8.0),
+                                  child: Row(
                                     children: [
-                                      DesignConfiguration.getCacheNotworkImage(
-                                        boxFit: BoxFit.cover,
-                                        context: context,
-                                        heightvalue: 107,
-                                        widthvalue: 107,
-                                        placeHolderSize: 50,
-                                        imageurlString: context
-                                            .read<ExploreProvider>()
-                                            .productList[index]
-                                            .image!,
+                                      Text(
+                                        DesignConfiguration.getPriceFormat(
+                                            context, price)!,
+                                        style: TextStyle(
+                                          color:
+                                              Theme.of(context).colorScheme.blue,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'ubuntu',
+                                        ),
                                       ),
-                                      Positioned.fill(
-                                        child: context
+                                      const SizedBox(
+                                        width: 3,
+                                      ),
+                                      Text(
+                                        double.parse(context
                                                     .read<ExploreProvider>()
                                                     .productList[index]
-                                                    .availability ==
-                                                '0'
-                                            ? Container(
-                                                height: 55,
-                                                color: colors.white70,
-                                                padding:
-                                                    const EdgeInsets.all(2),
-                                                child: Center(
-                                                  child: Text(
-                                                    getTranslated(context,
-                                                        'OUT_OF_STOCK_LBL'),
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .bodySmall!
-                                                        .copyWith(
-                                                          fontFamily: 'ubuntu',
-                                                          color: colors.red,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ),
-                                              )
-                                            : const SizedBox(),
+                                                    .prVarientList![0]
+                                                    .disPrice!) !=
+                                                0
+                                            ? DesignConfiguration.getPriceFormat(
+                                                context,
+                                                double.parse(context
+                                                    .read<ExploreProvider>()
+                                                    .productList[index]
+                                                    .prVarientList![0]
+                                                    .price!))!
+                                            : '',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelSmall!
+                                            .copyWith(
+                                                fontFamily: 'ubuntu',
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .lightBlack,
+                                                decoration:
+                                                    TextDecoration.lineThrough,
+                                                decorationColor:
+                                                    colors.darkColor3,
+                                                decorationStyle:
+                                                    TextDecorationStyle.solid,
+                                                decorationThickness: 2,
+                                                letterSpacing: 0),
                                       ),
                                     ],
                                   ),
                                 ),
+                                Padding(
+                                  padding: const EdgeInsetsDirectional.only(
+                                      top: 8.0, start: 15.0),
+                                  child: StarRating(
+                                    noOfRatings: context
+                                        .read<ExploreProvider>()
+                                        .productList[index]
+                                        .noOfRating!,
+                                    totalRating: context
+                                        .read<ExploreProvider>()
+                                        .productList[index]
+                                        .rating!,
+                                    needToShowNoOfRatings: true,
+                                  ),
+                                )
                               ],
                             ),
-                          ),
-                        ),
-                        Flexible(
-                          flex: 2,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsetsDirectional.only(
-                                    top: 15.0, start: 15.0),
-                                child: Text(
-                                  context
-                                      .read<ExploreProvider>()
-                                      .productList[index]
-                                      .name!,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleSmall!
-                                      .copyWith(
-                                          fontFamily: 'ubuntu',
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .fontColor,
-                                          fontWeight: FontWeight.w400,
-                                          fontStyle: FontStyle.normal,
-                                          fontSize: textFontSize12),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsetsDirectional.only(
-                                    start: 15.0, top: 8.0),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      DesignConfiguration.getPriceFormat(
-                                          context, price)!,
-                                      style: TextStyle(
-                                        color:
-                                            Theme.of(context).colorScheme.blue,
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: 'ubuntu',
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 3,
-                                    ),
-                                    Text(
-                                      double.parse(context
-                                                  .read<ExploreProvider>()
-                                                  .productList[index]
-                                                  .prVarientList![0]
-                                                  .disPrice!) !=
-                                              0
-                                          ? DesignConfiguration.getPriceFormat(
-                                              context,
-                                              double.parse(context
-                                                  .read<ExploreProvider>()
-                                                  .productList[index]
-                                                  .prVarientList![0]
-                                                  .price!))!
-                                          : '',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelSmall!
-                                          .copyWith(
-                                              fontFamily: 'ubuntu',
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .lightBlack,
-                                              decoration:
-                                                  TextDecoration.lineThrough,
-                                              decorationColor:
-                                                  colors.darkColor3,
-                                              decorationStyle:
-                                                  TextDecorationStyle.solid,
-                                              decorationThickness: 2,
-                                              letterSpacing: 0),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsetsDirectional.only(
-                                    top: 8.0, start: 15.0),
-                                child: StarRating(
-                                  noOfRatings: context
-                                      .read<ExploreProvider>()
-                                      .productList[index]
-                                      .noOfRating!,
-                                  totalRating: context
-                                      .read<ExploreProvider>()
-                                      .productList[index]
-                                      .rating!,
-                                  needToShowNoOfRatings: true,
-                                ),
-                              )
-                            ],
-                          ),
-                        )
-                      ],
+                          )
+                        ],
+                      ),
                     ),
                     Positioned.directional(
                       textDirection: Directionality.of(context),

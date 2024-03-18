@@ -1566,7 +1566,13 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                                                       if (!context
                                                           .read<CartProvider>()
                                                           .isProgress) {
-                                                        confirmDialog();
+                                                       // confirmDialog();
+                                                        if (context.read<CartProvider>().payMethod ==
+                        getTranslated(context, 'BANKTRAN')) {
+                      bankTransfer();
+                    } else {
+                      placeOrder('');
+                    }
                                                       }
                                                       context
                                                           .read<CartProvider>()

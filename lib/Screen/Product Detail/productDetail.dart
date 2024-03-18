@@ -43,6 +43,7 @@ import 'Widget/reviewUI.dart';
 import 'Widget/sellerDetail.dart';
 import 'Widget/specialExtraOfferBtn.dart';
 
+
 class ProductDetail extends StatefulWidget {
   final Product? model;
   final bool fromCart;
@@ -91,6 +92,7 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   int notificationoffset = 0;
   late int totalProduct = 0;
+  var locationtext='';
 
   bool notificationisloadmore = true,
       notificationisgettingdata = false,
@@ -552,8 +554,11 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
       sharePositionOrigin: Rect.largest,
     );*/
 
-    String shortenedLink = await generateShortDynamicLink();
-    Share.share(shortenedLink);
+    // String shortenedLink = await generateShortDynamicLink();
+    // Share.share(shortenedLink);
+     var str =
+                "$appName\n\n${getTranslated(context, 'APPFIND')}$androidLink$packageName\n\n ${getTranslated(context, 'IOSLBL')}\n$iosLink";
+            Share.share(str);
   }
 
   Future<void> _playAnimation() async {
@@ -1541,7 +1546,8 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
     return SliverAppBar(
       systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Theme.of(context).colorScheme.white),
-      expandedHeight: MediaQuery.of(context).size.height * 0.40,
+      expandedHeight: MediaQuery.of(context).size.height * 0.50,
+     
       floating: false,
       pinned: true,
       backgroundColor: Theme.of(context).colorScheme.white,
@@ -1853,6 +1859,10 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                               ),
                               getDivider(2, context),
                               _deliverPincode(),
+                              Padding(
+                                padding: const EdgeInsets.only(left:20.0),
+                                child: Text(locationtext,style: TextStyle(color: Colors.red[900],),),
+                              ),
                               getDivider(2, context),
                               CompareProduct(model: widget.model),
                               getDivider(2, context),
@@ -3706,10 +3716,12 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
               }
               if (!first) {
                 Routes.pop(context);
+           locationtext=msg.toString();
                 //setSnackbar(msg!, context);
               }
               if (showMsg) {
-                setSnackbar(msg!, context);
+                
+                //setSnackbar(msg!, context);
               }
             },
             onError: (error) {

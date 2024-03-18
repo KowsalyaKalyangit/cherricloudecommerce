@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import '../../Helper/Color.dart';
 import '../../Helper/Constant.dart';
 import '../../Helper/String.dart';
+import '../../Helper/routes.dart';
 import '../../Model/Section_Model.dart';
 import '../../Provider/productListProvider.dart';
 import '../../Provider/sellerDetailProvider.dart';
@@ -1283,8 +1284,9 @@ class _SearchState extends State<Explore> with TickerProviderStateMixin {
   }
 
   void filterDialog() {
-    print(
-        'currentRangeValue:$_currentRangeValues ******$selectedId*****$currentRangeValuesTest***$selectedIdTest******$disCardClick');
+    print('******');
+    // print(
+    //     'currentRangeValue:$_currentRangeValues ******$selectedId*****$currentRangeValuesTest***$selectedIdTest******$disCardClick');
 
     showModalBottomSheet(
       context: context,
@@ -1596,7 +1598,7 @@ class _SearchState extends State<Explore> with TickerProviderStateMixin {
                                   () {
                                     print('clear discard****$selectedId');
 
-                                    selectedIdTest!.addAll(selectedId!);
+                                    //selectedIdTest!.addAll(selectedId!);
                                     currentRangeValuesTest =
                                         _currentRangeValues!;
 
@@ -1604,7 +1606,7 @@ class _SearchState extends State<Explore> with TickerProviderStateMixin {
                                         'selected test***$selectedIdTest****$currentRangeValuesTest****$minPrice***$maxPrice');
                                     disCardClick = true;
 
-                                    selectedId!.clear();
+                                   // selectedId!.clear();
                                     _currentRangeValues = RangeValues(
                                         double.parse(minPrice),
                                         double.parse(maxPrice));
@@ -1613,7 +1615,7 @@ class _SearchState extends State<Explore> with TickerProviderStateMixin {
                                   },
                                 );
                               });
-                              // Routes.pop(context);
+                            Routes.pop(context);
                             }
                           },
                           child: Text(
@@ -1676,7 +1678,7 @@ class _SearchState extends State<Explore> with TickerProviderStateMixin {
           padding: const EdgeInsetsDirectional.only(top: 5),
           crossAxisCount: 2,
           shrinkWrap: true,
-          childAspectRatio: 0.750,
+          childAspectRatio: 0.850,
           mainAxisSpacing: 5,
           crossAxisSpacing: 5,
           physics: const BouncingScrollPhysics(),

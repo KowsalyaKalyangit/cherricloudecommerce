@@ -121,7 +121,8 @@ class _GridViewLayOutState extends State<GridViewLayOut> {
       double width = deviceWidth! * 0.5;
       Product model = context.read<ExploreProvider>().productList[index];
       return Card(
-        elevation: 0.2,
+        elevation: 0.9,
+       color: Theme.of(context).colorScheme.white,
         margin: const EdgeInsetsDirectional.only(bottom: 2, end: 2),
         child: InkWell(
           borderRadius: BorderRadius.circular(circularBorderRadius10),

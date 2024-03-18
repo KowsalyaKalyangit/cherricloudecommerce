@@ -427,7 +427,7 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
                                                 .paymentMethodList
                                                 .length,
                                             itemBuilder: (context, index) {
-                                              if (index == 1 &&
+                                              if (index == 1 ||
                                                   context
                                                       .read<PaymentProvider>()
                                                       .cod &&
@@ -435,67 +435,67 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
                                                           .productType !=
                                                       'digital_product') {
                                                 return paymentItem(index);
-                                              } else if (index == 2 &&
+                                              } else if (index == 2 ||
                                                   context
                                                       .read<PaymentProvider>()
                                                       .paypal) {
                                                 return paymentItem(index);
-                                              } else if (index == 3 &&
+                                              } else if (index == 3 ||
                                                   context
                                                       .read<PaymentProvider>()
                                                       .paumoney) {
                                                 return paymentItem(index);
-                                              } else if (index == 4 &&
+                                              } else if (index == 4 ||
                                                   context
                                                       .read<PaymentProvider>()
                                                       .razorpay) {
                                                 return paymentItem(index);
-                                              } else if (index == 5 &&
+                                              } else if (index == 5 ||
                                                   context
                                                       .read<PaymentProvider>()
                                                       .paystack) {
                                                 return paymentItem(index);
-                                              } else if (index == 6 &&
+                                              } else if (index == 6 ||
                                                   context
                                                       .read<PaymentProvider>()
                                                       .flutterwave) {
                                                 return paymentItem(index);
-                                              } else if (index == 7 &&
+                                              } else if (index == 7 ||
                                                   context
                                                       .read<PaymentProvider>()
                                                       .stripe) {
                                                 return paymentItem(index);
-                                              } else if (index == 8 &&
+                                              } else if (index == 8 ||
                                                   context
                                                       .read<PaymentProvider>()
                                                       .paytm) {
                                                 return paymentItem(index);
-                                              } else if (index == 0 &&
+                                              } else if (index == 0 ||
                                                   context
                                                       .read<PaymentProvider>()
                                                       .gpay) {
                                                 return paymentItem(index);
-                                              } else if (index == 9 &&
+                                              } else if (index == 9 ||
                                                   context
                                                       .read<PaymentProvider>()
                                                       .bankTransfer) {
                                                 return paymentItem(index);
-                                              } else if (index == 10 &&
+                                              } else if (index == 10 ||
                                                   context
                                                       .read<PaymentProvider>()
                                                       .midtrans) {
                                                 return paymentItem(index);
-                                              } else if (index == 11 &&
+                                              } else if (index == 11 ||
                                                   context
                                                       .read<PaymentProvider>()
                                                       .myfatoorah) {
                                                 return paymentItem(index);
-                                              } else if (index == 12 &&
+                                              } else if (index == 12 ||
                                                   context
                                                       .read<PaymentProvider>()
                                                       .instamojo) {
                                                 return paymentItem(index);
-                                              } else if (index == 13 &&
+                                              } else if (index == 13 ||
                                                   context
                                                       .read<PaymentProvider>()
                                                       .phonepe) {

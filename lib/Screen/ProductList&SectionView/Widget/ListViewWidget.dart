@@ -629,6 +629,7 @@ class _ListIteamWidgetState extends State<ListIteamWidget> {
                                                               children: <Widget>[
                                                                 InkWell(
                                                                   child: Card(
+                                                                    
                                                                     shape:
                                                                         RoundedRectangleBorder(
                                                                       borderRadius:
