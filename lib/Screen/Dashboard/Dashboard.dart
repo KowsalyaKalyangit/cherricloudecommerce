@@ -286,34 +286,33 @@ class DashboardPageState extends State<Dashboard>
         extendBodyBehindAppBar: false,
         extendBody: true,
         backgroundColor: Theme.of(context).colorScheme.lightWhite,
-        appBar: _selBottom == 0
-            ? _getAppBar()
-            : AppBar(
-                systemOverlayStyle: SystemUiOverlayStyle(
-                    statusBarColor: Theme.of(context).colorScheme.lightWhite),
-                toolbarHeight: 0,
-                elevation: 0,
-                backgroundColor: Theme.of(context).colorScheme.lightWhite,
-              ) /* const PreferredSize(
-                preferredSize: Size.zero,
-                child: SizedBox(),
-              ) */
-        ,
-        body: SafeArea(
-            child: Consumer<UserProvider>(builder: (context, data, child) {
-          return TabBarView(
-            controller: _tabController,
-            children: const [
-              HomePage(),
-              AllCategory(),
-              Explore(),
-              Cart(
-                fromBottom: true,
-              ),
-              MyProfile(),
-            ],
-          );
-        })),
+        // appBar: _selBottom == 0
+        //     ? _getAppBar()
+        //     : AppBar(
+        //         systemOverlayStyle: SystemUiOverlayStyle(
+        //             statusBarColor: Theme.of(context).colorScheme.lightWhite),
+        //         toolbarHeight: 0,
+        //         elevation: 0,
+        //         backgroundColor: Theme.of(context).colorScheme.lightWhite,
+        //       ) /* const PreferredSize(
+        //         preferredSize: Size.zero,
+        //         child: SizedBox(),
+        //       ) */
+       // ,
+        body: Consumer<UserProvider>(builder: (context, data, child) {
+                  return TabBarView(
+        controller: _tabController,
+        children: const [
+          HomePage(),
+          AllCategory(),
+          Explore(),
+          Cart(
+            fromBottom: true,
+          ),
+          MyProfile(),
+        ],
+                  );
+                }),
         // floatingActionButton: FloatingActionButton(
         //   backgroundColor: Colors.pink,
         //   child: const Icon(Icons.add),

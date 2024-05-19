@@ -6,6 +6,7 @@ import 'package:eshop_multivendor/Helper/ApiBaseHelper.dart';
 import 'package:eshop_multivendor/Helper/Color.dart';
 import 'package:eshop_multivendor/Helper/Constant.dart';
 import 'package:eshop_multivendor/Provider/CategoryProvider.dart';
+import 'package:eshop_multivendor/Screen/Notification/NotificationLIst.dart';
 import 'package:eshop_multivendor/Screen/SQLiteData/SqliteData.dart';
 import 'package:eshop_multivendor/Model/Section_Model.dart';
 import 'package:eshop_multivendor/Provider/CartProvider.dart';
@@ -21,12 +22,15 @@ import 'package:eshop_multivendor/Screen/homePage/widgets/horizontalCategoryList
 import 'package:eshop_multivendor/Screen/homePage/widgets/section.dart';
 import 'package:eshop_multivendor/Screen/homePage/widgets/slider.dart';
 import 'package:eshop_multivendor/cubits/brandsListCubit.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:version/version.dart';
 import '../../Helper/String.dart';
@@ -39,6 +43,7 @@ import '../../widgets/networkAvailablity.dart';
 import '../../widgets/security.dart';
 import '../../widgets/snackbar.dart';
 import '../NoInterNetWidget/NoInterNet.dart';
+import '../Profile/widgets/myProfileDialog.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -58,7 +63,14 @@ class _HomePageState extends State<HomePage>
   final ScrollController _scrollBottomBarController = ScrollController();
   DateTime? currentBackPressTime;
   ApiBaseHelper apiBaseHelper = ApiBaseHelper();
-
+  late final AnimationController buttonAnimationController =
+      AnimationController(
+          vsync: this, duration: const Duration(milliseconds: 300));
+  late final Animation<double> heightAnimation =
+      Tween<double>(begin: 55, end: 0).animate(CurvedAnimation(
+          parent: buttonAnimationController,
+          curve: const Interval(0.0, 1, curve: Curves.linear)));
+  final InAppReview _inAppReview = InAppReview.instance;
   int count = 1;
 
   @override
@@ -82,7 +94,10 @@ class _HomePageState extends State<HomePage>
       },
     );
   }
-
+  Future<void> _openStoreListing() => _inAppReview.openStoreListing(
+        appStoreId: appStoreId,
+        microsoftStoreId: 'microsoftStoreId',
+      );
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -137,6 +152,293 @@ class _HomePageState extends State<HomePage>
     super.build(context);
     return Scaffold(
       key: _scaffoldKey,
+      drawer: Drawer(
+        backgroundColor: Theme.of(context).colorScheme.white,
+        child: Column(children: [
+          UserAccountsDrawerHeader(
+              decoration: BoxDecoration(
+                    image: DecorationImage(
+                  image: AssetImage("assets/images/png/cart.png"),
+                     fit: BoxFit.cover),
+
+                  color: colors.primary),
+              accountEmail: Text(
+                "",
+                style: TextStyle(
+                    fontSize: 18,
+                    color: colors.primary,
+                    fontWeight: FontWeight.bold),
+              ),
+              accountName: Row(
+                children: [
+                  Text(
+                    "Shop. Smile. Repeat.",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  Icon(
+                    Icons.shopping_bag_outlined,
+                    color: Colors.white,
+                  )
+                ],
+              ),
+              //currentAccountPictureSize: Size.square(50),
+              currentAccountPicture: SvgPicture.asset(
+                DesignConfiguration.setSvgPath('cshop'),
+                height: 100,
+                width: 300,
+                fit: BoxFit.cover,
+                color: Colors.white,
+                //color: colors.grad2Color,
+              )),
+          ListTile(
+            leading: const Icon(
+              Icons.favorite,
+              color: colors.primary,
+            ),
+            title: InkWell(
+              focusColor: Colors.blue.withOpacity(0.4),
+              onTap: () {
+                // Get.back();
+                Routes.navigateToFavoriteScreen(context);
+              },
+             
+              child: Container(
+                width: 30.0,
+                height: 20,
+                child: Text(
+                  'Wishlist',
+                  style: TextStyle(color:  Colors.black),
+                ),
+              ),
+            ),
+          ),
+          Divider(
+            color: Colors.grey[300],
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.notifications_outlined,
+              color: colors.primary,
+            ),
+            title: InkWell(
+              focusColor: Colors.blue.withOpacity(0.4),
+              onTap: () {
+                // Get.back();
+             Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => const NotificationList(),
+                  ));
+              },
+              child: Container(
+                width: 30.0,
+                height: 20,
+                child: Text(
+                  'Notification',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+            ),
+          ),
+          Divider(
+            color: Colors.grey[300],
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.favorite,
+              color: colors.primary,
+            ),
+            title: InkWell(
+              focusColor: Colors.blue.withOpacity(0.4),
+              onTap: () {
+                // Get.back();
+                 Routes.navigateToFaqsListScreen(context);
+                 
+              },
+              child: Container(
+                width: 30.0,
+                height: 20,
+                child: Text(
+                  'Faq',
+                  style: TextStyle(color:  Colors.black),
+                ),
+              ),
+            ),
+          ),
+          Divider(
+            color: Colors.grey[300],
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.privacy_tip,
+              color: colors.primary,
+            ),
+            title: InkWell(
+              focusColor: Colors.blue.withOpacity(0.4),
+              onTap: () {
+                // Get.back();
+          Routes.navigateToPrivacyPolicyScreen(
+                context: context, title: 'RETURN_POLICY_LBL');
+              },
+              child: Container(
+                width: 30.0,
+                height: 20,
+                child: Text(
+                  'Privacy Policy',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+            ),
+          ),
+          Divider(
+            color: Colors.grey[300],
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.share,
+              color: colors.primary,
+            ),
+            title: InkWell(
+              focusColor: Colors.blue.withOpacity(0.4),
+              onTap: () {
+                // Get.back();
+                var str =
+                "$appName\n\n${getTranslated(context, 'APPFIND')}$androidLink$packageName\n\n ${getTranslated(context, 'IOSLBL')}\n$iosLink";
+            Share.share(str);
+              },
+              child: Container(
+                width: 30.0,
+                height: 20,
+                child: Text(
+                  'Share App',
+                  style: TextStyle(color:  Colors.black),
+                ),
+              ),
+            ),
+          ),
+          Divider(
+            color: Colors.grey[300],
+          ),
+          //UserAccountDrawerHeader
+
+          ListTile(
+            leading: const Icon(
+              Icons.rate_review_outlined,
+              color: colors.primary,
+            ),
+            title: InkWell(
+              focusColor: Colors.blue.withOpacity(0.4),
+              onTap: () {
+                // Get.back();
+                   _openStoreListing();
+              },
+              child: Container(
+                width: 30.0,
+                height: 30,
+                child: Text(
+                  'Rate us',
+                  style: TextStyle(color:  Colors.black),
+                ),
+              ),
+            ),
+          ),
+          
+          SizedBox(height: 10,),
+          Container(
+              height: 40,
+              width: 150,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [colors.grad1Color, colors.grad2Color],
+                    stops: [0, 1]),
+              ),
+              child: InkWell(
+                onTap: () {
+                    MyProfileDialog.showLogoutDialog(context);
+                },
+                child: Center(child: Text('LOGOUT',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),)),
+              )
+
+          //   //UserAccountDrawerHeader
+          // )
+        ]),
+      ),
+      appBar: AppBar(
+        toolbarHeight: 70,
+        backgroundColor: colors.primary,
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: InkWell(
+              onTap: () {
+                _scaffoldKey.currentState!.openDrawer();
+              },
+              child: Image.asset(
+                'assets/images/png/lefticon.png',
+                color: Theme.of(context).colorScheme.white,
+              )),
+        ),
+        leadingWidth: 45,
+        title: Container(
+          height: 50,
+          decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.white,
+              borderRadius: BorderRadius.circular(circularBorderRadius10),
+              border: Border.all(
+                color: Theme.of(context).colorScheme.fontColor.withOpacity(0.2),
+              )),
+          padding: const EdgeInsetsDirectional.only(start: 10, end: 10),
+          child: Row(
+            children: [
+              Expanded(
+                child: InkWell(
+                  child: Row(children: [
+                    SvgPicture.asset(
+                      DesignConfiguration.setSvgPath('homepage_search'),
+                      height: 15,
+                      width: 15,
+                    ),
+                    Padding(
+                      padding: const EdgeInsetsDirectional.only(start: 15),
+                      child: Text(getTranslated(context, 'searchHint'),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(
+                                color: Theme.of(context).colorScheme.lightBlack,
+                                fontSize: textFontSize12,
+                                fontWeight: FontWeight.w400,
+                                fontStyle: FontStyle.normal,
+                              )),
+                    )
+                  ]),
+                  onTap: () {
+                    Routes.navigateToSearchScreen(context);
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: InkWell(
+                  onTap: () {
+                    context.read<HomePageProvider>().setMicClickBtn(true);
+                    Routes.navigateToSearchScreen(context);
+                  },
+                  child: SvgPicture.asset(
+                    DesignConfiguration.setSvgPath('voice_search'),
+                    height: 25,
+                    width: 25,
+                    colorFilter: ColorFilter.mode(
+                        Theme.of(context).colorScheme.lightBlack,
+                        BlendMode.srcIn),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
       body: WillPopScope(
         onWillPop: onWillPopScope,
         child: SafeArea(
@@ -149,11 +451,11 @@ class _HomePageState extends State<HomePage>
                     physics: const BouncingScrollPhysics(),
                     controller: _scrollBottomBarController,
                     slivers: [
-                      SliverPersistentHeader(
-                        floating: false,
-                        pinned: true,
-                        delegate: SearchBarHeaderDelegate(),
-                      ),
+                      // SliverPersistentHeader(
+                      //   floating: false,
+                      //   pinned: true,
+                      //   delegate: SearchBarHeaderDelegate(),
+                      // ),
                       const SliverToBoxAdapter(
                         child: Column(
                           children: [

@@ -17,10 +17,7 @@ class NoInterNet extends StatelessWidget {
       : super(key: key);
 
   noIntImage() {
-    return SvgPicture.asset(
-      DesignConfiguration.setSvgPath('no_internet'),
-      fit: BoxFit.contain,
-    );
+    return Center(child: Image.asset('assets/images/png/nonet.jpeg',height: 250,width: 200,fit: BoxFit.cover,));
   }
 
   noIntText(BuildContext context) {

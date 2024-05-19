@@ -24,20 +24,15 @@ import '../../widgets/snackbar.dart';
 import '../NoInterNetWidget/NoInterNet.dart';
 import '../Product Detail/Widget/commanFiledsofProduct.dart';
 import 'Widget/ListcompareList.dart';
+ 
 
 class ProductList extends StatefulWidget {
   final String? name, id;
-  final bool? tag, fromSeller, fromBrands;
+  final bool? tag, fromSeller;
   final int? dis;
 
   const ProductList(
-      {Key? key,
-      this.id,
-      this.name,
-      this.tag,
-      this.fromSeller,
-      this.dis,
-      this.fromBrands})
+      {Key? key, this.id, this.name, this.tag, this.fromSeller, this.dis})
       : super(key: key);
 
   @override
@@ -53,15 +48,14 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
   bool _isLoading = true;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<Product> productList = [];
-
-//  List<Product> tempList = [];
+  List<Product> tempList = [];
   String sortBy = '', orderBy = 'DESC';
   int offset = 0;
   int total = 0;
 
   bool isLoadingmore = true;
   ScrollController controller = ScrollController();
-  List filterList = [];
+  var filterList;
   String minPrice = '0', maxPrice = '0';
   List<String>? attnameList;
   List<String>? attsubList;
@@ -69,6 +63,8 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
   List<String> selectedId = [];
   bool _isFirstLoad = true;
   String selId = '';
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
   Animation? buttonSqueezeanimation;
   AnimationController? buttonController;
   bool listType = true;
@@ -100,42 +96,34 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      offset = 0;
-      controller.addListener(_scrollListener);
-      searchController.addListener(
-        () {
-          if (searchController.text.isEmpty) {
-            setState(() {
-              query = '';
-              offset = 0;
-              isLoadingmore = true;
-              getProduct('0');
-            });
-          } else {
-            query = searchController.text;
-            offset = 0;
-            notificationisnodata = false;
+    controller.addListener(_scrollListener);
+    searchController.addListener(() {
+      if (searchController.text.isEmpty) {
+        setState(() {
+          query = '';
+          offset = 0;
+          isLoadingmore = true;
+          getProduct('0');
+        });
+      } else {
+        query = searchController.text;
+        offset = 0;
+        notificationisnodata = false;
 
+        if (query.trim().isNotEmpty) {
+          if (_debounce?.isActive ?? false) _debounce!.cancel();
+          _debounce = Timer(const Duration(milliseconds: 500), () {
             if (query.trim().isNotEmpty) {
-              if (_debounce?.isActive ?? false) _debounce!.cancel();
-              _debounce = Timer(
-                const Duration(milliseconds: 500),
-                () {
-                  if (query.trim().isNotEmpty) {
-                    isLoadingmore = true;
-                    offset = 0;
-                    getProduct('0');
-                  }
-                },
-              );
+              isLoadingmore = true;
+              offset = 0;
+              getProduct('0');
             }
-          }
-          ScaffoldMessenger.of(context).clearSnackBars();
-        },
-      );
-      getProduct('0');
+          });
+        }
+      }
+      ScaffoldMessenger.of(context).clearSnackBars();
     });
+    getProduct('0');
 
     _animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 2200));
@@ -249,11 +237,10 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
   }
 
   void getProduct(String top) {
-    //if (isLoadingmore) {
     if (mounted) {
       setState(
         () {
-          //isLoadingmore = false;
+          isLoadingmore = false;
           if (searchController.hasListeners &&
               searchController.text.isNotEmpty) {
             _isLoading = true;
@@ -272,16 +259,12 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
       parameter[ATTRIBUTE_VALUE_ID] = selId;
     }
     if (widget.tag!) parameter[TAG] = widget.name!;
-    if (widget.fromBrands ?? false) {
-      parameter['brand'] = widget.name; //passing brand name
-    } else if (widget.fromSeller!) {
+    if (widget.fromSeller!) {
       parameter['seller_id'] = widget.id!;
     } else {
       parameter[CATID] = widget.id ?? '';
     }
-    if (context.read<UserProvider>().userId != '') {
-      parameter[USER_ID] = context.read<UserProvider>().userId!;
-    }
+    if (context.read<UserProvider>().userId ! != null) parameter[USER_ID] = context.read<UserProvider>().userId !;
 
     if (widget.dis != null) {
       parameter[DISCOUNT] = widget.dis.toString();
@@ -300,6 +283,8 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
       parameter[MAXPRICE] = currentRangeValues!.end.round().toString();
     }
     context.read<ProductListProvider>().setProductListParameter(parameter);
+    // tempList.clear(); -----by me
+    // productList.clear();
 
     Future.delayed(Duration.zero).then(
       (value) => context.read<ProductListProvider>().getProductList().then(
@@ -308,57 +293,39 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
         ) async {
           bool error = value['error'];
           String? msg = value['message'];
-          setState(() {
-            _isLoading = false;
-          });
-
           if (offset == 0) notificationisnodata = error;
           if (!error) {
+            tempList.clear();
             total = int.parse(value['total']);
             if (_isFirstLoad) {
               filterList = value['filters'];
               minPrice = value[MINPRICE].toString();
               maxPrice = value[MAXPRICE].toString();
+              currentRangeValues =
+                  RangeValues(double.parse(minPrice), double.parse(maxPrice));
+
               _isFirstLoad = false;
             }
             if ((offset) < total) {
+              tempList.clear();
               var data = value['data'];
-              if (value.containsKey(TAG)) {
-                List<String> tempTagList = List<String>.from(value[TAG]);
-                if (tempTagList.isNotEmpty) tagList = tempTagList;
-              }
-              if (data.isNotEmpty) {
-                //  List<Product> items = [];
-                // List<Product> allitems = [];
-                List<Product> tempList = (data as List)
-                    .map((data) => Product.fromJson(data))
-                    .toList();
-                /* items.addAll(
-                    data.map((data) => Product.fromJson(data)).toList());*/
-
-                // allitems.addAll(items);
-
-                getAvailVarient(tempList);
-              }
-              /*  List<Product> tempList =
+              tempList =
                   (data as List).map((data) => Product.fromJson(data)).toList();
               if (value.containsKey(TAG)) {
-                List<String> tempTagList = List<String>.from(value[TAG]);
-                if (tempTagList.isNotEmpty) tagList = tempTagList;
+                List<String> tempList = List<String>.from(value[TAG]);
+                if (tempList.isNotEmpty) tagList = tempList;
               }
-              getAvailVarient(tempList);*/
+              getAvailVarient();
+              offset = offset + perPage;
             } else {
               if (msg != 'Products Not Found !') setSnackbar(msg!, context);
-
-              //notificationisnodata = true;
-            }
-            isLoadingmore = false;
-          } else {
-            if (msg != 'Products Not Found !') {
-              setSnackbar(msg!, context);
+              isLoadingmore = false;
               notificationisnodata = true;
             }
+          } else {
             isLoadingmore = false;
+            if (msg != 'Products Not Found !') setSnackbar(msg!, context);
+            notificationisnodata = true;
           }
 
           setState(
@@ -369,10 +336,9 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
         },
       ),
     );
-    // }
   }
 
-  void getAvailVarient(List<Product> tempList) {
+  void getAvailVarient() {
     for (int j = 0; j < tempList.length; j++) {
       if (tempList[j].stockType == '2') {
         for (int i = 0; i < tempList[j].prVarientList!.length; i++) {
@@ -383,13 +349,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
         }
       }
     }
-    if (offset == 0) {
-      productList = [];
-    }
-
     productList.addAll(tempList);
-    isLoadingmore = true;
-    offset = offset + perPage;
   }
 
   void sortDialog() {
@@ -400,8 +360,8 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(circularBorderRadius25),
-          topRight: Radius.circular(circularBorderRadius25),
+          topLeft: Radius.circular(25.0),
+          topRight: Radius.circular(25.0),
         ),
       ),
       builder: (builder) {
@@ -419,10 +379,10 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                         bottom: 16.0,
                       ),
                       child: Text(
-                        getTranslated(context, 'SORT_BY'),
+                        getTranslated(context, 'SORT_BY')!,
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.fontColor,
-                          fontSize: textFontSize18,
+                          fontSize: 18,
                         ),
                       ),
                     ),
@@ -453,7 +413,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 15),
                       child: Text(
-                        getTranslated(context, 'TOP_RATED'),
+                        getTranslated(context, 'TOP_RATED')!,
                         style: TextStyle(
                           color: sortBy == ''
                               ? Theme.of(context).colorScheme.white
@@ -472,7 +432,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 15),
                       child: Text(
-                        getTranslated(context, 'F_NEWEST'),
+                        getTranslated(context, 'F_NEWEST')!,
                         style: TextStyle(
                           color: sortBy == 'p.date_added' && orderBy == 'DESC'
                               ? Theme.of(context).colorScheme.white
@@ -507,7 +467,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 15),
                       child: Text(
-                        getTranslated(context, 'F_OLDEST'),
+                        getTranslated(context, 'F_OLDEST')!,
                         style: TextStyle(
                           color: sortBy == 'p.date_added' && orderBy == 'ASC'
                               ? Theme.of(context).colorScheme.white
@@ -542,7 +502,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 15),
                       child: Text(
-                        getTranslated(context, 'F_LOW'),
+                        getTranslated(context, 'F_LOW')!,
                         style: TextStyle(
                           color: sortBy == 'pv.price' && orderBy == 'ASC'
                               ? Theme.of(context).colorScheme.white
@@ -577,7 +537,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 15),
                       child: Text(
-                        getTranslated(context, 'F_HIGH'),
+                        getTranslated(context, 'F_HIGH')!,
                         style: TextStyle(
                           color: sortBy == 'pv.price' && orderBy == 'DESC'
                               ? Theme.of(context).colorScheme.white
@@ -628,8 +588,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                     padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.circular(circularBorderRadius25),
+                        borderRadius: BorderRadius.circular(25),
                       ),
                       height: 44,
                       child: TextField(
@@ -647,13 +606,13 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                             borderSide: BorderSide(
                                 color: Theme.of(context).colorScheme.gray),
                             borderRadius: const BorderRadius.all(
-                              Radius.circular(circularBorderRadius10),
+                              Radius.circular(10.0),
                             ),
                           ),
                           enabledBorder: const OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.transparent),
                             borderRadius: BorderRadius.all(
-                              Radius.circular(circularBorderRadius10),
+                              Radius.circular(10.0),
                             ),
                           ),
                           contentPadding:
@@ -661,7 +620,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                           border: const OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.transparent),
                             borderRadius: BorderRadius.all(
-                              Radius.circular(circularBorderRadius10),
+                              Radius.circular(10.0),
                             ),
                           ),
                           fillColor: Theme.of(context).colorScheme.lightWhite,
@@ -670,10 +629,10 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                           hintText: getTranslated(context, 'searchHint'),
                           hintStyle: Theme.of(context)
                               .textTheme
-                              .bodyMedium!
+                              .bodyText2!
                               .copyWith(
                                 color: Theme.of(context).colorScheme.fontColor,
-                                fontSize: textFontSize15,
+                                fontSize: 15,
                                 fontWeight: FontWeight.w400,
                                 fontStyle: FontStyle.normal,
                               ),
@@ -716,7 +675,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                   ),
                 ),
               ),
-              if (widget.fromSeller!) const SizedBox() else _tags(),
+              if (widget.fromSeller!) Container() else _tags(),
               sortAndFilterOption(),
             ],
           ),
@@ -762,7 +721,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                             padding: const EdgeInsetsDirectional.only(top: 5),
                             crossAxisCount: 2,
                             controller: controller,
-                            childAspectRatio: 0.8,
+                            childAspectRatio: 0.6,
                             physics: const AlwaysScrollableScrollPhysics(),
                             children: List.generate(
                               (offset < total)
@@ -788,57 +747,47 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
   }
 
   Widget _tags() {
-    if (!widget.tag!) {
-      if (tagList != null && tagList!.isNotEmpty) {
-        List<Widget> chips = [];
-        for (int i = 0; i < tagList!.length; i++) {
-          tagChip = ChoiceChip(
-            selected: false,
-            label: Text(tagList![i],
-                style: TextStyle(color: Theme.of(context).colorScheme.white)),
-            backgroundColor: colors.primary,
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(
-                  circularBorderRadius5,
-                ),
-              ),
-            ),
-            onSelected: (bool selected) {
-              if (mounted) {
-                Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => ProductList(
-                        name: tagList![i],
-                        tag: true,
-                        fromSeller: false,
-                      ),
-                    ));
-              }
-            },
-          );
+    if (tagList != null && tagList!.isNotEmpty) {
+      List<Widget> chips = [];
+      for (int i = 0; i < tagList!.length; i++) {
+        tagChip = ChoiceChip(
+          selected: false,
+          label: Text(tagList![i],
+              style: TextStyle(color: Theme.of(context).colorScheme.white)),
+          backgroundColor: colors.primary,
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(25))),
+          onSelected: (bool selected) {
+            if (mounted) {
+              Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => ProductList(
+                      name: tagList![i],
+                      tag: true,
+                      fromSeller: false,
+                    ),
+                  ));
+            }
+          },
+        );
 
-          chips.add(Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: tagChip));
-        }
+        chips.add(Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: tagChip));
+      }
 
-        return Container(
-          height: 50,
-          padding: const EdgeInsets.only(bottom: 10.0,),
-          child: ListView(
+      return Container(
+        height: 50,
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: ListView(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
-            children: chips,
-          ),
-        );
-      } else {
-        return const SizedBox();
-      }
+            children: chips),
+      );
     } else {
-      return const SizedBox();
+      return Container();
     }
   }
 
@@ -861,13 +810,12 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                   child: Row(
                     children: [
                       Text(
-                        getTranslated(context, 'SORT_BY'),
+                        getTranslated(context, 'SORT_BY')!,
                         style: const TextStyle(
-                          color: colors.primary,
-                          fontWeight: FontWeight.w500,
-                          fontStyle: FontStyle.normal,
-                          fontSize: textFontSize12,
-                        ),
+                            color: colors.primary,
+                            fontWeight: FontWeight.w500,
+                            fontStyle: FontStyle.normal,
+                            fontSize: textFontSize12),
                         textAlign: TextAlign.start,
                       ),
                       const Icon(
@@ -919,20 +867,14 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                   ),
                   const Text(' | '),
                   GestureDetector(
-                    onTap: () {
-                      if (filterList.isNotEmpty) {
-                        filterDialog();
-                      } else {
-                        setSnackbar(getTranslated(context, 'noItem'), context);
-                      }
-                    },
+                    onTap: filterDialog,
                     child: Row(
                       children: [
                         const Icon(
                           Icons.filter_alt_outlined,
                         ),
                         Text(
-                          getTranslated(context, 'FILTER'),
+                          getTranslated(context, 'FILTER')!,
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.fontColor,
                           ),
@@ -1059,10 +1001,10 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
           return AlertDialog(
             backgroundColor: Theme.of(context).colorScheme.lightWhite,
             title: Text(
-              getTranslated(context, 'SEarchHint'),
+              'Search for desired product',
               style: Theme.of(context)
                   .textTheme
-                  .titleMedium!
+                  .subtitle1!
                   .copyWith(color: Theme.of(context).colorScheme.fontColor),
               textAlign: TextAlign.center,
             ),
@@ -1081,8 +1023,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                               .withOpacity(.05))
                     ],
                     color: Theme.of(context).colorScheme.white,
-                    borderRadius: const BorderRadius.all(
-                        Radius.circular(circularBorderRadius50)),
+                    borderRadius: const BorderRadius.all(Radius.circular(50)),
                   ),
                   child: IconButton(
                       icon: const Icon(
@@ -1110,20 +1051,20 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                   child: Center(
                     child: speech.isListening
                         ? Text(
-                            getTranslated(context, "I'm listening..."),
+                            getTranslated(context, "I'm listening...")!,
                             style: Theme.of(context)
                                 .textTheme
-                                .titleSmall!
+                                .subtitle2!
                                 .copyWith(
                                     color:
                                         Theme.of(context).colorScheme.fontColor,
                                     fontWeight: FontWeight.bold),
                           )
                         : Text(
-                            getTranslated(context, 'Not listening'),
+                            getTranslated(context, 'Not listening')!,
                             style: Theme.of(context)
                                 .textTheme
-                                .titleSmall!
+                                .subtitle2!
                                 .copyWith(
                                   color:
                                       Theme.of(context).colorScheme.fontColor,
@@ -1146,9 +1087,11 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
       enableDrag: false,
       isScrollControlled: true,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(circularBorderRadius10),
+        borderRadius: BorderRadius.circular(10.0),
       ),
       builder: (builder) {
+        // currentRangeValues =
+        //     RangeValues(double.parse(minPrice), double.parse(maxPrice));
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
             return Column(
@@ -1158,7 +1101,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                   padding: const EdgeInsetsDirectional.only(top: 30.0),
                   child: AppBar(
                     title: Text(
-                      getTranslated(context, 'FILTER'),
+                      getTranslated(context, 'FILTER')!,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.fontColor,
                       ),
@@ -1171,8 +1114,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                         return Container(
                           margin: const EdgeInsets.all(10),
                           child: InkWell(
-                            borderRadius:
-                                BorderRadius.circular(circularBorderRadius4),
+                            borderRadius: BorderRadius.circular(4),
                             onTap: () => Navigator.of(context).pop(),
                             child: const Padding(
                               padding: EdgeInsetsDirectional.only(end: 4.0),
@@ -1206,31 +1148,30 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                               if (index == 0) {
                                 return Column(
                                   children: [
-                                    if (currentRangeValues != null)
-                                      SizedBox(
-                                        width: deviceWidth,
-                                        child: Card(
-                                          elevation: 0,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              getTranslated(
-                                                  context, 'Price Range'),
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleMedium!
-                                                  .copyWith(
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .lightBlack,
-                                                      fontWeight:
-                                                          FontWeight.normal),
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 2,
-                                            ),
+                                    SizedBox(
+                                      width: deviceWidth,
+                                      child: Card(
+                                        elevation: 0,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            getTranslated(
+                                                context, 'Price Range')!,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle1!
+                                                .copyWith(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .lightBlack,
+                                                    fontWeight:
+                                                        FontWeight.normal),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
                                           ),
                                         ),
                                       ),
+                                    ),
                                     currentRangeValues != null
                                         ? RangeSlider(
                                             values: currentRangeValues!,
@@ -1250,7 +1191,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                                               setState(() {});
                                             },
                                           )
-                                        : const SizedBox(),
+                                        : Container(),
                                   ],
                                 );
                               } else {
@@ -1296,8 +1237,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                                     );
                                   } else if (attSType[i] == '2') {
                                     itemLabel = ClipRRect(
-                                      borderRadius: BorderRadius.circular(
-                                          circularBorderRadius10),
+                                      borderRadius: BorderRadius.circular(10.0),
                                       child: Image.network(
                                         attSValue[i],
                                         width: 80,
@@ -1340,15 +1280,13 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                                         Theme.of(context).colorScheme.white,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(
-                                        attSType[i] == '1'
-                                            ? circularBorderRadius100
-                                            : circularBorderRadius10,
+                                        attSType[i] == '1' ? 100 : 10,
                                       ),
                                       side: BorderSide(
                                           color:
                                               selectedId.contains(attListId![i])
                                                   ? colors.primary
-                                                  : colors.secondary,
+                                                  : colors.black12,
                                           width: 1.5),
                                     ),
                                     onSelected: (bool selected) {
@@ -1386,7 +1324,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                                             filterList[index]['name'],
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .titleMedium!
+                                                .subtitle1!
                                                 .copyWith(
                                                   color: Theme.of(context)
                                                       .colorScheme
@@ -1416,13 +1354,13 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                                               ).toList(),
                                             ),
                                           )
-                                        : const SizedBox()
+                                        : Container()
                                   ],
                                 );
                               }
                             },
                           )
-                        : const SizedBox(),
+                        : Container(),
                   ),
                 ),
                 Container(
@@ -1434,11 +1372,25 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                         width: deviceWidth! * 0.4,
                         child: OutlinedButton(
                           onPressed: () {
-                            selectedId = [];
+                              selectedId = [];
                             currentRangeValues = RangeValues(
                                 double.parse(minPrice), double.parse(maxPrice));
                             setState(() {});
-                            if (mounted) {}
+                               if (mounted) {
+                               setState(
+                                () {
+                                  _isLoading = true;
+                                  total = 0;
+                                  offset = 0;
+                                  isLoadingmore = true;
+                                  productList.clear();
+                          });
+                           getProduct('0');
+                            Navigator.pop(context, 'Product Filter');
+
+                          }
+
+
                           },
                           child: Text(
                             getTranslated(context, 'DISCARD'),
@@ -1461,7 +1413,6 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                                   _isLoading = true;
                                   total = 0;
                                   offset = 0;
-                                  isLoadingmore = true;
                                   productList.clear();
                                 },
                               );

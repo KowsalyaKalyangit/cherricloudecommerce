@@ -71,6 +71,12 @@ class StateProfile extends State<MyProfile> with TickerProviderStateMixin {
   setStateNow() {
     setState(() {});
   }
+var profilecats=[
+  'My Orders',
+  'Manage Address',
+  'My Wallet',
+  'My Transactions'
+];
 
   _getDrawer() {
     return ListView(
@@ -78,25 +84,25 @@ class StateProfile extends State<MyProfile> with TickerProviderStateMixin {
       shrinkWrap: true,
       physics:  BouncingScrollPhysics(),
       children: <Widget>[
-        context.read<UserProvider>().userId == ''
-            ?   SizedBox()
-            : _getDrawerItem(
-                getTranslated(context, 'MY_ORDERS_LBL'), 'pro_myorder'),
+        // context.read<UserProvider>().userId == ''
+        //     ?   SizedBox()
+        //     : _getDrawerItem(
+        //         getTranslated(context, 'MY_ORDERS_LBL'), 'pro_myorder'),
                  
-        context.read<UserProvider>().userId == ''
-            ? const SizedBox()
-            : _getDrawerItem(
-                getTranslated(context, 'MANAGE_ADD_LBL'), 'pro_address'),
-        context.read<UserProvider>().userId == ''
-            ? const SizedBox()
-            : _getDrawerItem(getTranslated(context, 'MYWALLET'), 'pro_wh'),
+        // context.read<UserProvider>().userId == ''
+        //     ? const SizedBox()
+        //     : _getDrawerItem(
+        //         getTranslated(context, 'MANAGE_ADD_LBL'), 'pro_address'),
+        // context.read<UserProvider>().userId == ''
+        //     ? const SizedBox()
+        //     : _getDrawerItem(getTranslated(context, 'MYWALLET'), 'pro_wh'),
         context.read<UserProvider>().userId == ''
             ? const SizedBox()
             : _getDrawerItem(getTranslated(context, 'YOUR_PROM_CO'), 'promo'),
-        context.read<UserProvider>().userId == ''
-            ? const SizedBox()
-            : _getDrawerItem(
-                getTranslated(context, 'MYTRANSACTION'), 'pro_th'),
+        // context.read<UserProvider>().userId == ''
+        //     ? const SizedBox()
+        //     : _getDrawerItem(
+        //         getTranslated(context, 'MYTRANSACTION'), 'pro_th'),
         // _getDrawerItem(
         //     getTranslated(context, 'CHANGE_THEME_LBL'), 'pro_theme'),
         // _getDrawerItem(
@@ -121,24 +127,24 @@ class StateProfile extends State<MyProfile> with TickerProviderStateMixin {
         _getDrawerItem(getTranslated(context, 'ABOUT_LBL'), 'pro_aboutus'),
         _getDrawerItem(
             getTranslated(context, 'CONTACT_LBL'), 'pro_contact_us'),
-        _getDrawerItem(getTranslated(context, 'FAQS'), 'pro_faq'),
-        _getDrawerItem(getTranslated(context, 'PRIVACY'), 'pro_pp'),
+        // _getDrawerItem(getTranslated(context, 'FAQS'), 'pro_faq'),
+        // _getDrawerItem(getTranslated(context, 'PRIVACY'), 'pro_pp'),
         _getDrawerItem(getTranslated(context, 'TERM'), 'pro_tc'),
         _getDrawerItem(getTranslated(context, 'SHIPPING_POLICY_LBL'),
             'pro_shipping_policy'),
         _getDrawerItem(
             getTranslated(context, 'RETURN_POLICY_LBL'), 'pro_return_policy'),
-        _getDrawerItem(getTranslated(context, 'RATE_US'), 'pro_rateus'),
-        _getDrawerItem(getTranslated(context, 'Share App'), 'pro_share'),
+        // _getDrawerItem(getTranslated(context, 'RATE_US'), 'pro_rateus'),
+        // _getDrawerItem(getTranslated(context, 'Share App'), 'pro_share'),
         // context.read<UserProvider>().userId == ''
         //     ? const SizedBox()
         //     : _getDrawerItem(
         //         getTranslated(context, 'DeleteAcoountNow'),
         //         'delete_user',
         //       ),
-        context.read<UserProvider>().userId == ''
-            ? const SizedBox()
-            : _getDrawerItem(getTranslated(context, 'LOGOUT'), 'pro_logout'),
+        // context.read<UserProvider>().userId == ''
+        //     ? const SizedBox()
+        //     : _getDrawerItem(getTranslated(context, 'LOGOUT'), 'pro_logout'),
       ],
     );
   }
@@ -167,9 +173,10 @@ class StateProfile extends State<MyProfile> with TickerProviderStateMixin {
           ),
         ),
         onTap: () {
-          if (title == getTranslated(context, 'MY_ORDERS_LBL')) {
-            Routes.navigateToMyOrderScreen(context);
-          } else if (title == getTranslated(context, 'MYTRANSACTION')) {
+          // if (title == getTranslated(context, 'MY_ORDERS_LBL')) {
+          //   Routes.navigateToMyOrderScreen(context);
+          // } 
+           if (title == getTranslated(context, 'MYTRANSACTION')) {
             Routes.navigateToUserTransactionsScreen(context);
           } else if (title == getTranslated(context, 'MYWALLET')) {
             Routes.navigateToMyWalletScreen(context);
@@ -193,11 +200,12 @@ class StateProfile extends State<MyProfile> with TickerProviderStateMixin {
           } else if (title == getTranslated(context, 'RATE_US')) {
             _openStoreListing();
           } 
-          else if (title == getTranslated(context, 'Share App')) {
-            var str =
-                "$appName\n\n${getTranslated(context, 'APPFIND')}$androidLink$packageName\n\n ${getTranslated(context, 'IOSLBL')}\n$iosLink";
-            Share.share(str);
-          } else if (title == getTranslated(context, 'ABOUT_LBL')) {
+          // else if (title == getTranslated(context, 'Share App')) {
+          //   var str =
+          //       "$appName\n\n${getTranslated(context, 'APPFIND')}$androidLink$packageName\n\n ${getTranslated(context, 'IOSLBL')}\n$iosLink";
+          //   Share.share(str);
+          // } 
+          else if (title == getTranslated(context, 'ABOUT_LBL')) {
             Routes.navigateToPrivacyPolicyScreen(
                 context: context, title: 'ABOUT_LBL');
           } else if (title == getTranslated(context, 'SHIPPING_POLICY_LBL')) {
@@ -206,9 +214,11 @@ class StateProfile extends State<MyProfile> with TickerProviderStateMixin {
           } else if (title == getTranslated(context, 'RETURN_POLICY_LBL')) {
             Routes.navigateToPrivacyPolicyScreen(
                 context: context, title: 'RETURN_POLICY_LBL');
-          } else if (title == getTranslated(context, 'FAQS')) {
-            Routes.navigateToFaqsListScreen(context);
-          } else if (title == getTranslated(context, 'CHAT')) {
+          } 
+          // else if (title == getTranslated(context, 'FAQS')) {
+          //   Routes.navigateToFaqsListScreen(context);
+          // } 
+          else if (title == getTranslated(context, 'CHAT')) {
             Routes.navigateToConverstationListScreen(context);
           } else if (title == getTranslated(context, 'CHANGE_THEME_LBL')) {
             CustomBottomSheet.showBottomSheet(
@@ -223,9 +233,11 @@ class StateProfile extends State<MyProfile> with TickerProviderStateMixin {
                 }
               });
             });
-          } else if (title == getTranslated(context, 'LOGOUT')) {
+          } 
+          else if (title == getTranslated(context, 'LOGOUT')) {
             MyProfileDialog.showLogoutDialog(context);
-          } else if (title == getTranslated(context, 'CHANGE_PASS_LBL')) {
+          }
+           else if (title == getTranslated(context, 'CHANGE_PASS_LBL')) {
             CustomBottomSheet.showBottomSheet(
                 child: const ChangePasswordBottomSheet(),
                 context: context,
@@ -252,40 +264,12 @@ class StateProfile extends State<MyProfile> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       
+     appBar: AppBar(
+      toolbarHeight: 110,
+     // backgroundColor: colors.primary,
       
-        key: scaffoldKey,
-        body: Consumer<UserProvider>(builder: (context, data, child) {
-          return SafeArea(
-           
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding:
-                        const EdgeInsetsDirectional.only(bottom: 10.0, top: 0),
-                    child: Container(
-                      height: 110,
-                      padding: const EdgeInsetsDirectional.only(
-                        start: 10.0,
-                      ),
-                      
-                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(bottomLeft: Radius.circular(25),bottomRight: Radius.circular(25)),
-                       gradient: LinearGradient(
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
-                                              colors: [
-                                                colors.grad2Color,
-                                                colors.grad1Color
-                                              ],
-                                              stops: [
-                                                0,
-                                                1
-                                              ]),
-                      // borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30),bottomRight: Radius.circular(30))
-                     ),
-                      child: Row(
+  
+      title: Row(
                         children: [
                           Selector<UserProvider, String>(
                             selector: (_, provider) => provider.profilePic,
@@ -335,11 +319,49 @@ class StateProfile extends State<MyProfile> with TickerProviderStateMixin {
                           ),
                         ],
                       ),
-                    ),
-                  ),
-                  _getDrawer(),
-                ],
+     ),
+        key: scaffoldKey,
+        body: Consumer<UserProvider>(builder: (context, data, child) {
+          return SingleChildScrollView(
+            
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [ 
+                    // borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30),bottomRight: Radius.circular(30))
+                   
+                   Container(
+                    height: 120,
+                   // width: double.infinity,
+                    child: GridView.builder(
+
+              itemCount: 4,
+              shrinkWrap: false,
+              padding: const EdgeInsets.all(12),
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: (150.0 / 40.0),
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
               ),
+              itemBuilder: (context, index) {
+                return Card(
+                  elevation: 5,
+                  child: Container(
+                   decoration: BoxDecoration(gradient: LinearGradient(colors: [
+                    colors.grad2Color,
+                    colors.grad1Color
+                   ])),
+                    child: Center(child: Text(profilecats[index],style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),)),
+                  ),
+                );
+              },
+            )
+                    
+                   ) ,
+                   Divider(),
+                _getDrawer(),
+              ],
             ),
           );
         }));

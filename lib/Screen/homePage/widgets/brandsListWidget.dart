@@ -57,7 +57,7 @@ class BrandsListWidget extends StatelessWidget {
                                       builder: (context) => ProductList(
                                         name: state.brands[index].name,
                                         id: state.brands[index].id,
-                                        fromBrands: true,
+                                       // fromBrands: true,
                                         tag: false,
                                         fromSeller: false,
                                       ),
